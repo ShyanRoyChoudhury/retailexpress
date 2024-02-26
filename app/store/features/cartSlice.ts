@@ -1,15 +1,14 @@
+import { Product } from "@/types/productPageTypes";
 import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 
-interface Product {
-    id?: string
-    name: string,
-    price: number
-}
-interface CartItem{
-    cart: Product[]
+interface CartItem extends Product{
+    id: string
 }
 
-const initialState: CartItem = {
+export interface CartState {
+    cart: Product[]
+}
+const initialState: CartState = {
     cart: []
 };
 
