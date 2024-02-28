@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import AddToCart from "@/components/ui/AddToCart";
 import { Product } from "@/types/productPageTypes";
+//import { CartItem } from "../store/features/cartSlice";
 
 type Props = {
   searchParams: {

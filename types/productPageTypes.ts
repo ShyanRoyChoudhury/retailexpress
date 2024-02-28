@@ -14,6 +14,7 @@ export interface Product {
     } | null,
     "thumbnails": [ string ],
     "highlights": [ string ],
+    "product_id": string,
     "offers": [
       {
         "offer_type": string | null,

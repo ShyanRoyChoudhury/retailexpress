@@ -1,3 +1,5 @@
+'use client'
+
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/userSlice";
 import cartReducer from "./features/cartSlice";

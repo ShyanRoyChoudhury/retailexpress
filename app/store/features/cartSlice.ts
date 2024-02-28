@@ -1,10 +1,6 @@
 import { Product } from "@/types/productPageTypes";
 import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 
-interface CartItem extends Product{
-    id: string
-}
-
 export interface CartState {
     cart: Product[]
 }
@@ -17,15 +13,13 @@ export const cartSlice = createSlice({
     initialState,
     reducers:{
         addToCart: (state, action: PayloadAction<Product>) => {
-            const productToAdd = {
-                id: nanoid(),
-
-                ...action.payload
-            }
-            state.cart.push(productToAdd)
+            state.cart.push(action.payload)
         },
-        removeFromCart: (state, action: PayloadAction<string>) => {
-            state.cart = state.cart.filter(item=> item.id !== action.payload)
+        removeFromCart: (state, action: PayloadAction<Product>) => {
+            const index = state.cart.findIndex(item=> item.product_id === action.payload.product_id);
+            if(index !== -1){
+                state.cart.splice(index, 1)
+            }
         }
     }
 })
