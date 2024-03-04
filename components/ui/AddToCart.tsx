@@ -11,7 +11,7 @@ import { HandleAddToCart, HandleRemoveFromCart } from "@/lib/handleCart";
 function AddToCart({ product }: { product: Product }) {
   const dispatch: AppDispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.cart);
-  console.log(cart);
+  //console.log(cart);
 
   const howManyInCart = (product_id: string | undefined): number => {
     const product = cart.filter(
@@ -19,7 +19,7 @@ function AddToCart({ product }: { product: Product }) {
     );
     if (!product) return 0;
 
-    console.log("cartTotal: ", product.length);
+    //console.log("cartTotal: ", product.length);
     return product.length;
   };
   let [cartNum, setCartNum] = useState<number>(

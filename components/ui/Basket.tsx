@@ -4,13 +4,18 @@ import { groupByProductId } from "@/lib/groupByProductId";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import AddToCart from "./AddToCart";
+import { Button } from "./button";
+import { useEffect, useState } from "react";
+import { getCartTotal } from "@/lib/getCartTotal";
 
 function Basket() {
   const cart = useSelector((state: RootState) => state.cart.cart);
   const grouped = groupByProductId(cart);
 
-  console.log("cart:", cart);
-  console.log("grouped", grouped);
+  const [cartTotal, setCartTotal] = useState("");
+  useEffect(() => {
+    setCartTotal(getCartTotal(cart));
+  }, [cart]);
 
   return (
     <div className="">
@@ -44,6 +49,15 @@ function Basket() {
           );
         })}
       </ul>
+      <div className="flex justify-end font-bold text-xl space-x-2">
+        <p>Cart Total: </p>
+        <p>{!cartTotal.match("₹ 0.00") ? `${cartTotal}` : "₹ 0.00"}</p>
+      </div>
+      <div>
+        {cart.length > 0 && (
+          <Button className="h-20 mt-5 w-full">Checkout</Button>
+        )}
+      </div>
     </div>
   );
 }

@@ -31,7 +31,6 @@ type Props = {
 async function ProductPage({ searchParams: { flipkartLink } }: Props) {
   const productQuery: string = removeFlipkartURL(flipkartLink);
   const result: Product | undefined = await fetchProduct(productQuery);
-  console.log(result);
   if (!result) return notFound();
   return (
     <div className="flex flex-col p-6 lg:p-10 lg:flex-row w-full">
