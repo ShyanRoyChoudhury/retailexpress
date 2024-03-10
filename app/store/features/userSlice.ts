@@ -1,24 +1,28 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { User } from "@/types/userTypes";
+import { PayloadAction, createSlice, nanoid } from "@reduxjs/toolkit";
 
-const initialState = {
-    user: null
+interface userState{
+    user: User;
+}
+const initialState: userState = {
+    user: {
+        username: ''
+    }
 };
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers:{
-        addUser: (state, action) => {
-            // const user = {
-            //     id: nanoid(),
-            //     name: action.payload.name,
-            //     email: action.payload.email
-            // }
-            // state.user = user;
-            state.user = action.payload;
+        addUser: (state, action: PayloadAction<string>) => {
+            
+            state.user.username = action.payload
+            // state.user = action.payload;
         },
-        removeUser: (state, action) => {
-            state.user = null;
+        removeUser: (state,) => {
+            state.user = {
+                username: ''
+            }
         }
     }
 })

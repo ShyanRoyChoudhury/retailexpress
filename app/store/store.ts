@@ -3,11 +3,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/userSlice";
 import cartReducer from "./features/cartSlice";
-
+import userLoggedInReducer from './features/userLoggedSlice';
 export const store = configureStore({
     reducer: {
         user:userReducer,
-        cart:cartReducer
+        cart:cartReducer,
+        userLoggedIn: userLoggedInReducer
     }
 })
 

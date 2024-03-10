@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "./button";
 import {
   Grid2X2,
   Heart,
@@ -15,7 +14,8 @@ import { getCartTotal } from "@/lib/getCartTotal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useEffect, useState } from "react";
-
+import UserDropdown from "./UserDropdown";
+import Cookies from "js-cookie";
 function Header() {
   const router = useRouter();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,14 +25,18 @@ function Header() {
     router.push(`/search?q=${input}`);
   };
   const cart = useSelector((state: RootState) => state.cart.cart);
-
+  const user = useSelector((state: RootState) => state.user.user);
+  const userLoggedIn = useSelector((state: RootState) => state.userLoggedIn);
   const [cartTotal, setCartTotal] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   useEffect(() => {
+    //let usernameFromCookie = Cookies.get("username");
+    //if (usernameFromCookie !== undefined) setUsername(usernameFromCookie);
     setCartTotal(getCartTotal(cart));
   }, [cart]);
   return (
     <header className="flex flex-col md:flex-row bg-slate-400 px-10 py-7 space-x-5 items-center">
-      <Link href={"/"} className="mb-5 md:mb-0">
+      <Link href={"/"} className="mb-5 md:mb-0 font-semibold text-white">
         RetailExpress
       </Link>
 
@@ -79,16 +83,21 @@ function Header() {
             <p>Items</p>
           </div>
         </Link>
-        <Link
-          href={"/"}
-          className=" flex items-center text-sm font-semibold text-white space-x-1"
-        >
-          <User size={20} />
-          <div>
-            <p className="font-extralight text-xs">Sign in</p>
-            <p>Account</p>
-          </div>
-        </Link>
+        {!!Cookies.get("username") ? (
+          <UserDropdown />
+        ) : (
+          <Link
+            href={"/signin"}
+            className=" flex items-center text-sm font-semibold text-white space-x-1"
+          >
+            <User size={20} />
+            <div>
+              <p className="font-extralight text-xs">Sign in</p>
+              <p>Account</p>
+            </div>
+          </Link>
+        )}
+
         <Link
           href={"/basket"}
           className=" flex items-center text-sm font-bold text-white space-x-1"
@@ -99,7 +108,7 @@ function Header() {
               <p className="font-extralight text-xs">
                 {cart.length > 0 ? `${cart.length} Items` : `No Items`}
               </p>
-              <p>{cartTotal.match("₹ 0.00") ? "₹ 0.00" : cartTotal}</p>
+              <p>{cartTotal.match("₹ 0.00") ? "Cart empty" : cartTotal}</p>
             </div>
           </div>
         </Link>

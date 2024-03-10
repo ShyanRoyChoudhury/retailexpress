@@ -7,7 +7,9 @@
     @apply rounded-md p-5 h-full hover:opacity-75 border-2 border-white hover:border-blue-400;
   }
 }
-
+body{
+  background-color: #F1F2F4;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
