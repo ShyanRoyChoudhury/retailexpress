@@ -1,7 +1,7 @@
 import { searchResult } from "@/types/searchTypes";
 
 function fetchSearch(query: string): Promise<searchResult | undefined> {
-const newUrl = new URL(`http://192.168.29.201:3000/search/${query}`);
+const newUrl = new URL(`${process.env.BACKEND_CRAWLER_URL}}/search/${query}`);
 
 const response = fetch(newUrl, { 
     method: "get" , 
