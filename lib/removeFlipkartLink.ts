@@ -1,9 +1,9 @@
-function removeFlipkartURL(link: string): string{
-    const flipkartLink = 'https://flipkart.com/'
-    if(link.startsWith(flipkartLink)){
-      return link.substring(flipkartLink.length)
+function removeBaseURL(link: string, baseURL: string): string{
+    //const flipkartLink = 'https://flipkart.com/'
+    if(link.startsWith(baseURL)){
+      return link.substring(baseURL.length)
     }
     return link
 }
 
-export default removeFlipkartURL;
+export default removeBaseURL;

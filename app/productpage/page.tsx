@@ -1,5 +1,5 @@
 import fetchProduct from "@/lib/fetchProduct";
-import removeFlipkartURL from "@/lib/removeFlipkartLink";
+import removeBaseURL from "@/lib/removeFlipkartLink";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
@@ -24,18 +24,38 @@ import { Product } from "@/types/productPageTypes";
 
 type Props = {
   searchParams: {
-    flipkartLink: string;
+    flipkartLink?: string;
+    serverLink?: string;
   };
 };
 
-async function ProductPage({ searchParams: { flipkartLink } }: Props) {
-  const productQuery: string = removeFlipkartURL(flipkartLink);
-  const result: Product | undefined = await fetchProduct(productQuery);
-  if (!result) return notFound();
+async function ProductPage({
+  searchParams: { flipkartLink, serverLink },
+}: Props) {
+  let productQuery: string | undefined;
+  console.log("poduct page: ", flipkartLink);
+  console.log("poduct page: ", serverLink);
+  if (flipkartLink) {
+    productQuery = removeBaseURL(flipkartLink, "https://flipkart.com/");
+    console.log("poduct page inside flipkart: ", productQuery);
+  }
+  if (serverLink) {
+    productQuery = removeBaseURL(
+      serverLink,
+      `${process.env.BACKEND_CRAWLER_URL}/product/`
+    );
+    console.log("poduct page inside server: ", productQuery);
+  }
+
+  if (!productQuery) return;
+  const productData = await fetchProduct(productQuery);
+  if (!productData) return notFound();
+  const { result, url } = productData;
+  //console.log("url inside product page:", url);
   return (
     <div className="flex flex-col p-6 lg:p-10 lg:flex-row w-full">
       <div className="hidden lg:inline space-y-4">
-        {result.thumbnails.map((image, i) => {
+        {result?.thumbnails.map((image, i) => {
           const upscaledImage = image.replace("128/128", "720/720");
           return (
             <Image
@@ -54,7 +74,7 @@ async function ProductPage({ searchParams: { flipkartLink } }: Props) {
         className="flex w-3/5 lg:w-1/2 items-center mx-auto lg:mx-20 self-start max-w-xl mb:10"
       >
         <CarouselContent>
-          {result.thumbnails.map((image, i) => {
+          {result?.thumbnails.map((image, i) => {
             const upscaledImage = image.replace("128/128", "720/720");
             return (
               <CarouselItem key={i}>
@@ -77,16 +97,16 @@ async function ProductPage({ searchParams: { flipkartLink } }: Props) {
         <CarouselNext />
       </Carousel>
       <div className="flex-1 border w-full rounded-md p-5 space-y-2">
-        <h1 className="text-3xl font-bold">{result.name}</h1>
+        <h1 className="text-3xl font-bold">{result?.name}</h1>
 
         <ul className="text-slate-600 font-aria">
           <h3 className="font-semibold">Features</h3>
-          {result.highlights.map((features, i) => (
+          {result?.highlights.map((features, i) => (
             <li key={i}>{features}</li>
           ))}
         </ul>
 
-        {result.rating && (
+        {result?.rating && (
           <div className="flex text-yellow-400 items-center">
             <p>{result.rating}</p>
             <p>⭑</p>
@@ -94,8 +114,8 @@ async function ProductPage({ searchParams: { flipkartLink } }: Props) {
         )}
 
         <div>
-          <p className="font-semibold">₹ {result.current_price}</p>
-          {result.discounted && (
+          <p className="font-semibold">₹ {result?.current_price}</p>
+          {result?.discounted && (
             <div>
               <p className="line-through font-semibold text-slate-500 text-xs">
                 ₹ {result.original_price}
@@ -106,7 +126,7 @@ async function ProductPage({ searchParams: { flipkartLink } }: Props) {
         </div>
 
         <hr />
-        <AddToCart product={result} />
+        <AddToCart product={result} productURL={url} />
 
         {!!result.specs.length && (
           <h3 className="font-semibold text-slate-600 font-aria">
@@ -144,5 +164,4 @@ async function ProductPage({ searchParams: { flipkartLink } }: Props) {
     </div>
   );
 }
-
 export default ProductPage;

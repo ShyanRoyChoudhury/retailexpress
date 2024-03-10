@@ -30,11 +30,12 @@ function UserDropdown() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("server response:", res);
+
       setUsername(res.data.username);
-      console.log("username", username);
     } catch (err) {
       console.error(err);
+      Cookies.remove("username");
+      Cookies.remove("currentUser");
     }
   }
   useEffect(() => {

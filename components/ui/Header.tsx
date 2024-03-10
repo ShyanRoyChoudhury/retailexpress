@@ -16,6 +16,8 @@ import { RootState } from "@/app/store/store";
 import { useEffect, useState } from "react";
 import UserDropdown from "./UserDropdown";
 import Cookies from "js-cookie";
+import { CartItem } from "@/app/store/features/cartSlice";
+import { Product } from "@/types/productPageTypes";
 function Header() {
   const router = useRouter();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,7 +34,8 @@ function Header() {
   useEffect(() => {
     //let usernameFromCookie = Cookies.get("username");
     //if (usernameFromCookie !== undefined) setUsername(usernameFromCookie);
-    setCartTotal(getCartTotal(cart));
+    const cartProducts: Product[] = cart.map((item: CartItem) => item.product);
+    setCartTotal(getCartTotal(cartProducts));
   }, [cart]);
   return (
     <header className="flex flex-col md:flex-row bg-slate-400 px-10 py-7 space-x-5 items-center">

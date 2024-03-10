@@ -31,5 +31,6 @@ export interface Product {
           }
         ]
       }
-    ]
+    ],
+    "productURL": string | undefined
 }

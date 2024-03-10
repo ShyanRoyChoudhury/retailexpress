@@ -6,43 +6,37 @@ import { Button } from "./button";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "@/app/store/features/cartSlice";
 import { AppDispatch, RootState } from "@/app/store/store";
-import { HandleAddToCart, HandleRemoveFromCart } from "@/lib/handleCart";
 
-function AddToCart({ product }: { product: Product }) {
+function AddToCart({
+  product,
+  productURL,
+}: {
+  product: Product;
+  productURL?: string;
+}) {
   const dispatch: AppDispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.cart);
-  //console.log(cart);
 
   const howManyInCart = (product_id: string | undefined): number => {
-    const product = cart.filter(
-      (cartProduct) => cartProduct.product_id === product_id
+    const products = cart.filter(
+      (cartProduct) => cartProduct.product.product_id === product_id
     );
     if (!product) return 0;
 
     //console.log("cartTotal: ", product.length);
-    return product.length;
+    return products.length;
   };
   let [cartNum, setCartNum] = useState<number>(
     howManyInCart(product.product_id)
   );
   const handleAddToCart = () => {
-    dispatch(addToCart(product));
+    dispatch(addToCart({ product: { ...product, productURL } }));
     setCartNum((prevCart) => prevCart + 1);
   };
   const handleRemoveFromCart = (product: Product) => {
     dispatch(removeFromCart(product));
     setCartNum((prevCart) => prevCart - 1);
   };
-
-  // function handleProductAdd(): void {
-  //   HandleAddToCart({ product });
-  //   setCartNum((prevCart) => prevCart + 1);
-  // }
-
-  // function handleProductRemove(): void {
-  //   HandleRemoveFromCart({ product });
-  //   setCartNum((prevCart) => prevCart + 1);
-  // }
 
   if (cartNum > 0) {
     return (

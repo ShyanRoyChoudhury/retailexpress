@@ -1,8 +1,14 @@
 import { Product } from "@/types/productPageTypes";
 
-function fetchProduct(query: string): Promise<Product | undefined>{
+export interface FetchProductProps{
+    result: Product,
+    url: string
+}
+async function fetchProduct(query: string): Promise<FetchProductProps | undefined>{
     const newURL = new URL(`${process.env.BACKEND_CRAWLER_URL}/product/${query}`);
-    const response = fetch(newURL, {
+    console.log('inside fetchProduct, url:', newURL)
+    try{
+        const response = await fetch(newURL, {
         method: 'get',
         headers: {
             "Content-Type": 'application/json'
@@ -10,13 +16,13 @@ function fetchProduct(query: string): Promise<Product | undefined>{
         next:{
             revalidate: 60*60
         }
-    })
-    .then(res => res.json())
-    .then(data => {
-            if(data.length === 0) return;
-            return data;
         })
-    .catch((err) => console.error(err))
-    return response;
+        const data = await response.json();
+        if(data.length === 0) return;
+        
+        return {result:data, url:newURL.href};
+    }catch(err){
+         console.error(err)
+    }
 }
 export default fetchProduct;

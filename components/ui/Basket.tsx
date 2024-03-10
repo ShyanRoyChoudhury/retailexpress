@@ -7,44 +7,59 @@ import AddToCart from "./AddToCart";
 import { Button } from "./button";
 import { useEffect, useState } from "react";
 import { getCartTotal } from "@/lib/getCartTotal";
+import Link from "next/link";
+import { Product } from "@/types/productPageTypes";
+import { CartItem } from "@/app/store/features/cartSlice";
 
 function Basket() {
   const cart = useSelector((state: RootState) => state.cart.cart);
-  const grouped = groupByProductId(cart);
 
+  const cartProducts: Product[] = cart.map((item: CartItem) => item.product);
+  const grouped = groupByProductId(cartProducts);
   const [cartTotal, setCartTotal] = useState("");
   useEffect(() => {
-    setCartTotal(getCartTotal(cart));
-  }, [cart]);
+    setCartTotal(getCartTotal(cartProducts));
+  }, [cartProducts]);
 
   return (
     <div className="">
       <ul className="divide-y-2">
         {Object.keys(grouped).map((id) => {
           const item = grouped[id][0];
+          console.log("item inside Basket", item);
           const upscaledImage = item.thumbnails[0].replace(
             "128/128",
             "720/720"
           );
+
           return (
             <li key={id} className="flex p-5 space-x-4">
-              <div>
-                <Image
-                  src={upscaledImage}
-                  alt={item.name + " " + id}
-                  width={100}
-                  height={100}
-                />
-              </div>
-              <div className="md:flex space-x-2 space-y-2 items-center">
+              <Link
+                href={{
+                  pathname: `/productpage`,
+                  query: {
+                    serverLink: item.productURL,
+                  },
+                }}
+              >
                 <div>
-                  <h2 className="font-bold line-clamp-2">{item.name}</h2>
-                  <p className="overflow line-clamp-1">{item.highlights}</p>
+                  <Image
+                    src={upscaledImage}
+                    alt={item.name + " " + id}
+                    width={100}
+                    height={100}
+                  />
                 </div>
-                <div className="border p-4 flex flex-col space-y-1 w-[150px] h-[100px]">
-                  <AddToCart product={item} />
+                <div className="md:flex space-x-2 space-y-2 items-center">
+                  <div>
+                    <h2 className="font-bold line-clamp-2">{item.name}</h2>
+                    <p className="overflow line-clamp-1">{item.highlights}</p>
+                  </div>
+                  <div className="border p-4 flex flex-col space-y-1 w-[150px] h-[100px]">
+                    <AddToCart product={item} />
+                  </div>
                 </div>
-              </div>
+              </Link>
             </li>
           );
         })}
