@@ -1,3 +1,4 @@
+"use client";
 import { useLogout } from "@/app/hooks/useLogout";
 import { AppDispatch, RootState } from "@/app/store/store";
 import {
@@ -10,16 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import axios from "axios";
 import { User } from "lucide-react";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { useLogin } from "@/app/hooks/useLogin";
 
 function UserDropdown() {
   const { logout } = useLogout();
-  //const router = useRouter();
-  //const dispatch: AppDispatch = useDispatch();
   const userLoggedIn = useSelector((state: RootState) => state.userLoggedIn);
   const [username, setUsername] = useState<string | null>(null);
   async function getUserData(token: string) {
@@ -41,10 +38,8 @@ function UserDropdown() {
   useEffect(() => {
     const token = Cookies.get("currentUser");
     const username = Cookies.get("username");
-    console.log("inside useEffect dropdown, token:", token);
-    console.log("userLoggedIn:", userLoggedIn);
     if (token && username) getUserData(token);
-  }, [userLoggedIn]);
+  }, []);
 
   return (
     <DropdownMenu>

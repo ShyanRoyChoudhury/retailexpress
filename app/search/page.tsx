@@ -10,14 +10,14 @@ type Props = {
 async function pages({ searchParams: { q } }: Props) {
   const results: searchResult | undefined = await fetchSearch(q);
   return (
-    <div className="p-10">
+    <div className="p-10 ">
       <h1 className="text-3xl font-bold mb-2">Results for {q}</h1>
       <h2 className="text-gray-400 md:text-xs mb-1">
         ({results?.total_result} results)
       </h2>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {results?.result.map((product: Result, index: number) => (
-          <li key={index}>
+          <li key={index} className="bg-white">
             <Product product={product} />
           </li>
         ))}

@@ -42,20 +42,20 @@ function Basket() {
                   },
                 }}
               >
-                <div>
-                  <Image
-                    src={upscaledImage}
-                    alt={item.name + " " + id}
-                    width={100}
-                    height={100}
-                  />
-                </div>
                 <div className="md:flex space-x-2 space-y-2 items-center">
-                  <div>
+                  <div className="w-3/5">
+                    <Image
+                      src={upscaledImage}
+                      alt={item.name + " " + id}
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                  <div className="w-2/5">
                     <h2 className="font-bold line-clamp-2">{item.name}</h2>
                     <p className="overflow line-clamp-1">{item.highlights}</p>
                   </div>
-                  <div className="border p-4 flex flex-col space-y-1 w-[150px] h-[100px]">
+                  <div className="border w-1/5 p-4 flex flex-col space-y-1  h-[100px]">
                     <AddToCart product={item} />
                   </div>
                 </div>

@@ -10,6 +10,7 @@
 body{
   background-color: #F1F2F4;
 }
+
 @layer base {
   :root {
     --background: 0 0% 100%;

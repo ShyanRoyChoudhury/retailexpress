@@ -12,7 +12,6 @@ export async function GET(req: NextRequest){
     const headersList = headers();
     const authToken = headersList.get("authorization");
     const token = authToken?.split(' ')[1];
-    console.log('token: ',token);
     if(token && secret)
     try {
         const payload = jwt.verify(token, secret) as JwtPayload;

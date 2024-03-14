@@ -1,6 +1,7 @@
 {
   "name": "retailexpress",
   "version": "0.1.0",
+  "author": "Shyan Roy Choudhury",
   "private": true,
   "scripts": {
     "dev": "next dev",

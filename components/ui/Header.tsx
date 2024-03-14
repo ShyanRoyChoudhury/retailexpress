@@ -31,14 +31,20 @@ function Header() {
   const userLoggedIn = useSelector((state: RootState) => state.userLoggedIn);
   const [cartTotal, setCartTotal] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    //let usernameFromCookie = Cookies.get("username");
-    //if (usernameFromCookie !== undefined) setUsername(usernameFromCookie);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     const cartProducts: Product[] = cart.map((item: CartItem) => item.product);
     setCartTotal(getCartTotal(cartProducts));
   }, [cart]);
+
+  if (!mounted) return <></>;
   return (
-    <header className="flex flex-col md:flex-row bg-slate-400 px-10 py-7 space-x-5 items-center">
+    <header className="flex flex-col md:flex-row bg-slate-400 px-10 py-7 space-x-5 items-center w-full">
       <Link href={"/"} className="mb-5 md:mb-0 font-semibold text-white">
         RetailExpress
       </Link>

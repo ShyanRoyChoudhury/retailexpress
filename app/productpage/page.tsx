@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import AddToCart from "@/components/ui/AddToCart";
 import { Product } from "@/types/productPageTypes";
+import { Button } from "@/components/ui/button";
 //import { CartItem } from "../store/features/cartSlice";
 
 type Props = {
@@ -54,7 +55,7 @@ async function ProductPage({
   //console.log("url inside product page:", url);
   return (
     <div className="flex flex-col p-6 lg:p-10 lg:flex-row w-full">
-      <div className="hidden lg:inline space-y-4">
+      <div className="hidden lg:inline space-y-4 h-screen overflow-auto">
         {result?.thumbnails.map((image, i) => {
           const upscaledImage = image.replace("128/128", "720/720");
           return (
@@ -69,34 +70,41 @@ async function ProductPage({
           );
         })}
       </div>
-      <Carousel
-        opts={{ loop: true }}
-        className="flex w-3/5 lg:w-1/2 items-center mx-auto lg:mx-20 self-start max-w-xl mb:10"
-      >
-        <CarouselContent>
-          {result?.thumbnails.map((image, i) => {
-            const upscaledImage = image.replace("128/128", "720/720");
-            return (
-              <CarouselItem key={i}>
-                <div className="p-1">
-                  <div className="flex items-center justify-center aspect-square relative p-2">
-                    <Image
-                      src={upscaledImage}
-                      alt={result.name + " " + i}
-                      width={400}
-                      height={400}
-                      className="rounded-sm"
-                    />
+      <div className="">
+        <Carousel
+          opts={{ loop: true }}
+          className="flex w-3/5 lg:w-4/5 items-center mx-auto self-start max-w-xl mb:10"
+        >
+          <CarouselContent>
+            {result?.thumbnails.map((image, i) => {
+              const upscaledImage = image.replace("128/128", "720/720");
+              return (
+                <CarouselItem key={i}>
+                  <div className="p-1">
+                    <div className="flex items-center justify-center aspect-square relative p-2">
+                      <Image
+                        src={upscaledImage}
+                        alt={result.name + " " + i}
+                        width={400}
+                        height={400}
+                        className="rounded-sm"
+                      />
+                    </div>
                   </div>
-                </div>
-              </CarouselItem>
-            );
-          })}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-      <div className="flex-1 border w-full rounded-md p-5 space-y-2">
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+        <div className="space-x-2 px-2">
+          <Button>Buy Now</Button>
+          <AddToCart product={result} productURL={url} />
+        </div>
+      </div>
+
+      <div className="flex-1 border w-full rounded-md p-5 space-y-2 bg-white overflow-auto h-screen">
         <h1 className="text-3xl font-bold">{result?.name}</h1>
 
         <ul className="text-slate-600 font-aria">
@@ -126,7 +134,6 @@ async function ProductPage({
         </div>
 
         <hr />
-        <AddToCart product={result} productURL={url} />
 
         {!!result.specs.length && (
           <h3 className="font-semibold text-slate-600 font-aria">

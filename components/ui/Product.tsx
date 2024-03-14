@@ -12,9 +12,9 @@ function Product({ product }: { product: Result }) {
           flipkartLink: product.link,
         },
       }}
-      className="flex flex-col border p-5 rounded-md h-full relative shadow-sm"
+      className="flex flex-col border p-5 rounded-md h-full relative shadow-sm space-y-1"
     >
-      <p>{product.name}</p>
+      <p className="font-semibold hover:text-blue-600">{product.name}</p>
 
       <Image
         src={product.thumbnail}
@@ -28,7 +28,7 @@ function Product({ product }: { product: Result }) {
 
       {product.discounted && (
         <div>
-          <Badge className="absolute top-2 right-2">Sale</Badge>
+          <Badge className="absolute top-1.5 right-2">Sale</Badge>
           <p className="line-through text-gray-400 text-xs font-semibold">
             ₹ {product.original_price}
           </p>
