@@ -38,7 +38,7 @@ function Signin({ className }: SigninProps) {
       Cookies.set("username", formData.username);
       router.back();
     } catch (error) {
-      setErrorMesssage("Invalid username/password");
+      setErrorMesssage("Invalid credentials");
     }
   };
   return (

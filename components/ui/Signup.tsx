@@ -3,19 +3,14 @@ import React, { useState } from "react";
 import { Button } from "./button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { headers } from "next/headers";
-import { useDispatch } from "react-redux";
-import { addUser } from "@/app/store/features/userSlice";
-import { AppDispatch } from "@/app/store/store";
 
 function Signup() {
   const router = useRouter();
-  const dispatch: AppDispatch = useDispatch();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-
+  const [errorMessage, setErrorMesssage] = useState<string | null>(null);
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -26,22 +21,18 @@ function Signup() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "/api/signup",
-        {
-          username: formData.username,
-          password: formData.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      //dispatch(addUser(formData.username));
-      //router.push("/signin");
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+      const { redirectURL, error } = await res.json();
+
+      if (error) {
+        throw new Error(error);
+      }
+      router.push(redirectURL);
     } catch (err) {
-      console.error(err);
+      setErrorMesssage("Username already exists");
     }
   };
 
@@ -78,6 +69,11 @@ function Signup() {
               onChange={handleOnChange}
             />
           </div>
+          {errorMessage && (
+            <p className="bg-red-300 text-red-600 p-3 rounded-lg mt-2 ">
+              {errorMessage}
+            </p>
+          )}
           <Button className="mt-2" type="submit">
             Signup
           </Button>

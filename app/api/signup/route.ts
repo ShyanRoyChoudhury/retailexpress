@@ -1,5 +1,6 @@
 import prisma from "@/db";
 import bcrypt from 'bcrypt';
+import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest){
@@ -18,7 +19,10 @@ export async function POST(req: NextRequest){
                 password: hashPassword
             }
         })
-        return NextResponse.redirect('/signin')
+        const response = {
+            redirectURL: new URL('/signin', req.url)
+        }
+        return NextResponse.json(response)
     }else{
         return NextResponse.json({
             error: 'username already exists'
