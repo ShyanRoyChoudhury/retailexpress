@@ -36,8 +36,13 @@ function Signin({ className }: SigninProps) {
     router.back();
   };
   return (
-    <div className={cn("md:flex  shadow-md rounded-lg bg-white", className)}>
-      <div className="bg-blue-600 w-full md:w-2/5 p-8 space-y-4">
+    <div
+      className={cn(
+        "md:flex  shadow-md rounded-lg bg-white text-left",
+        className
+      )}
+    >
+      <div className="bg-blue-600 w-full md:w-2/5 p-8 space-y-4 ">
         <h1 className="text-2xl font-semibold text-white">Login</h1>
         <p className=" text-white">Get access to your Orders, Wishlist!</p>
       </div>

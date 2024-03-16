@@ -46,7 +46,7 @@ function Signup() {
   };
 
   return (
-    <div className="md:flex w-4/5 md:w-3/5 h-1/3 shadow-md rounded-lg bg-white">
+    <div className="md:flex w-4/5 md:w-3/5 h-1/3 shadow-md rounded-lg bg-white text-left">
       <div className="bg-blue-600 w-full md:w-2/5 p-8 space-y-4">
         <h1 className="text-2xl font-semibold text-white">
           Looks Like you are new here!
