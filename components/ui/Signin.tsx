@@ -24,16 +24,22 @@ function Signin({ className }: SigninProps) {
     username: "",
     password: "",
   });
+  const [errorMessage, setErrorMesssage] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const HandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await login(formData);
-    dispatch(updateLoggedInStatus(true));
-    Cookies.set("username", formData.username);
-    router.back();
+    try {
+      await login(formData);
+      dispatch(updateLoggedInStatus(true));
+      Cookies.set("username", formData.username);
+      router.back();
+    } catch (error) {
+      setErrorMesssage("Invalid username/password");
+    }
   };
   return (
     <div
@@ -50,7 +56,7 @@ function Signin({ className }: SigninProps) {
       <div className="w-full p-6 md:w-3/5">
         <form className="flex flex-col p-2" onSubmit={HandleSubmit}>
           <div>
-            <h2>Username</h2>
+            <label>Username</label>
             <input
               name="username"
               placeholder="Your Name"
@@ -60,7 +66,7 @@ function Signin({ className }: SigninProps) {
             />
           </div>
           <div>
-            <h2>Password</h2>
+            <label>Password</label>
             <input
               name="password"
               placeholder="password"
@@ -69,6 +75,11 @@ function Signin({ className }: SigninProps) {
               onChange={handleChange}
             />
           </div>
+          {errorMessage && (
+            <p className="bg-red-300 text-red-600 p-4 rounded-md mt-2">
+              {errorMessage}
+            </p>
+          )}
           <Button className="mt-2" type="submit">
             Login
           </Button>

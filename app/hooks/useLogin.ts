@@ -24,15 +24,20 @@ export const useLogin = () => {
                 },
               }
             );
-            const { token , redirectURL, userName } = res.data;
+            const { redirectURL, error } = res.data;
             //Cookies.set("currentUser", token, { path: '/'});
-            if(res && redirectURL && userName){
+              if(error){
+                throw new Error(error)
+              }
+
+            if(res && redirectURL){
                 //dispatch(addUser(userName));
                 router.push(redirectURL)
                 // setLoggedIn(true)
             }
           } catch (err) {
             console.error(err);
+            throw err
           }
     }
 

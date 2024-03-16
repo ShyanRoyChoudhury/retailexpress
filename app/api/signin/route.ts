@@ -15,7 +15,7 @@ export async function POST(req: NextRequest){
         }
     })
     if(!user){
-        return NextResponse.json({error: 'Username not'});
+        return NextResponse.json({error: 'Username not found'});
     }else{
         let valid = await bcrypt.compare(password, user.password)
         if(!valid){
@@ -24,9 +24,9 @@ export async function POST(req: NextRequest){
         let token = jwt.sign({userId: user.id}, secret, {expiresIn: '5h'})
         
         let responseData = {
-            //token,
+
             redirectURL: new URL('/', req.url),
-            userName: user.username
+
         }
         //Cookies.set('currentUser', token)
         cookies().set('currentUser', token);
