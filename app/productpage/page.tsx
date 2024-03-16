@@ -85,8 +85,7 @@ async function ProductPage({
                       <Image
                         src={upscaledImage}
                         alt={result.name + " " + i}
-                        width={400}
-                        height={400}
+                        layout="fill"
                         className="rounded-sm"
                       />
                     </div>

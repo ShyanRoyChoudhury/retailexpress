@@ -24,7 +24,9 @@ function Header() {
     e.preventDefault();
 
     const input = e.currentTarget.input.value;
-    router.push(`/search?q=${input}`);
+    if (input !== "") {
+      router.push(`/search?q=${input}`);
+    }
   };
   const cart = useSelector((state: RootState) => state.cart.cart);
   const user = useSelector((state: RootState) => state.user.user);
@@ -59,6 +61,7 @@ function Header() {
           placeholder="search here..."
           className="flex-1 px-4 rounded-l-full outline-none 
                     placeholder:text-xs text-black"
+          required
         />
         <button type="submit">
           <Search className="px-2 w-10 bg-yellow-300 h-10 rounded-full" />
