@@ -18,6 +18,7 @@ import UserDropdown from "./UserDropdown";
 import Cookies from "js-cookie";
 import { CartItem } from "@/app/store/features/cartSlice";
 import { Product } from "@/types/productPageTypes";
+import { useSession } from "next-auth/react";
 function Header() {
   const router = useRouter();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,18 +34,15 @@ function Header() {
   const userLoggedIn = useSelector((state: RootState) => state.userLoggedIn);
   const [cartTotal, setCartTotal] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const session = useSession();
 
   useEffect(() => {
     const cartProducts: Product[] = cart.map((item: CartItem) => item.product);
     setCartTotal(getCartTotal(cartProducts));
   }, [cart]);
 
-  if (!mounted) return <></>;
+  //if (!mounted) return <></>;
   return (
     <header className="flex flex-col md:flex-row bg-slate-400 px-10 py-7 space-x-5 items-center w-full">
       <Link href={"/"} className="mb-5 md:mb-0 font-semibold text-white">
@@ -95,7 +93,7 @@ function Header() {
             <p>Items</p>
           </div>
         </Link>
-        {!!Cookies.get("username") ? (
+        {!!session.data?.user ? (
           <UserDropdown />
         ) : (
           <Link

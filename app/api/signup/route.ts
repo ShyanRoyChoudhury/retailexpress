@@ -10,7 +10,7 @@ export async function POST(req: NextRequest){
             username
         }
     })
-    console.log(user)
+    //console.log(user)
     if(!user){
         let hashPassword = await bcrypt.hash(password, 10);
         await prisma.user.create({

@@ -2,22 +2,19 @@
 import React, { useState } from "react";
 import { Button } from "./button";
 import Link from "next/link";
-import axios from "axios";
-import { headers } from "next/headers";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
-import { addUser } from "@/app/store/features/userSlice";
 import { useRouter } from "next/navigation";
-import { useLogin } from "@/app/hooks/useLogin";
-import { updateLoggedInStatus } from "@/app/store/features/userLoggedSlice";
+// import { useLogin } from "@/app/hooks/useLogin";
 import { cn } from "@/lib/utils";
-import Cookies from "js-cookie";
-
+import { getProviders, signIn } from "next-auth/react";
 interface SigninProps {
   className?: string;
+  callbackURL?: string;
+  providers?: any;
 }
-function Signin({ className }: SigninProps) {
-  const { login } = useLogin();
+function Signin({ className, callbackURL, providers }: SigninProps) {
+  //   const { login } = useLogin();
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -32,14 +29,13 @@ function Signin({ className }: SigninProps) {
   };
   const HandleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await login(formData);
-      dispatch(updateLoggedInStatus(true));
-      Cookies.set("username", formData.username);
-      router.back();
-    } catch (error) {
-      setErrorMesssage("Invalid credentials");
-    }
+
+    await signIn("credentials", {
+      username: formData.username,
+      password: formData.password,
+      redirect: true,
+      callbackUrl: callbackURL ?? "http://localhost:3000/",
+    });
   };
   return (
     <div
@@ -88,8 +84,25 @@ function Signin({ className }: SigninProps) {
           <Link href={"/signup"}>New to RetailExpress? Create an account.</Link>
         </div>
       </div>
+      {Object.values(providers).map((provider: any) => (
+        <div key={provider.name} style={{ marginBottom: 0 }}>
+          <button onClick={() => signIn(provider.id)}>
+            Sign in with {provider.name}
+          </button>
+        </div>
+      ))}
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  const providers = await getProviders();
+  console.log(providers);
+  return {
+    props: {
+      providers,
+    },
+  };
 }
 
 export default Signin;

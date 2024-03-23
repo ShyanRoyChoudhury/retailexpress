@@ -1,6 +1,4 @@
 "use client";
-import { useLogout } from "@/app/hooks/useLogout";
-import { AppDispatch, RootState } from "@/app/store/store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,36 +7,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import axios from "axios";
+// import axios from "axios";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+import { signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
+// import { GetUserData } from "@/lib/getUserData";
 
 function UserDropdown() {
-  const { logout } = useLogout();
-  const userLoggedIn = useSelector((state: RootState) => state.userLoggedIn);
-  const [username, setUsername] = useState<string | null>(null);
-  async function getUserData(token: string) {
-    try {
-      const res = await axios.get("/api/user", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  const session = useSession();
 
-      setUsername(res.data.username);
-    } catch (err) {
-      console.error(err);
-      Cookies.remove("username");
-      Cookies.remove("currentUser");
-    }
-  }
+  const [username, setUsername] = useState<string | null>(null);
+  console.log(session);
   useEffect(() => {
-    const token = Cookies.get("currentUser");
-    const username = Cookies.get("username");
-    if (token && username) getUserData(token);
+    const storedUsername =
+      (Cookies.get("username") as unknown as string) ||
+      (session.data?.user.username as string);
+    if (typeof window !== "undefined") {
+      // This code runs only on the client
+      if (storedUsername) {
+        setUsername(storedUsername);
+      } else if (session.data?.user?.username) {
+        setUsername(session.data.user.username);
+        Cookies.set("username", session.data.user.username);
+      }
+    }
   }, []);
 
   return (
@@ -57,7 +51,14 @@ function UserDropdown() {
         <DropdownMenuItem>Billing</DropdownMenuItem>
         <DropdownMenuItem>Team</DropdownMenuItem>
         <DropdownMenuItem>Subscription</DropdownMenuItem>
-        <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            signOut();
+            localStorage.removeItem("username");
+          }}
+        >
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
